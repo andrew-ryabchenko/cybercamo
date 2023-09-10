@@ -1,0 +1,112 @@
+{%extends "cybercamo/base.html"%}
+
+{%block page_title%}
+Cybercamo | Home
+{%endblock%}
+
+{%block page_body%}
+
+<div class="accordion px-4" id="accordion">
+
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Embed
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+        <div class="accordion-body">
+            
+            <div class="position-relative top-0 start-0 z-0" style="height: 50vh;" id="accordionBodyEmbed">
+                
+                <img id="inputImagePreview" height="100%" width="100%" class="position-absolute z-1">
+
+                <div class="row align-items-center justify-content-center" style="height: 50vh;">
+                    
+                    <div class="col" id="embedInputs" style="max-width: 600px">
+
+                        <form action="{% url 'embed_route' %}" method="post" enctype="multipart/form-data" id="embedForm">
+                            {% csrf_token %}
+                            <div class="px-5 mb-3 position-relative z-3">
+                                <label for="inputFile" class="form-label">Input File</label>
+                                <input class="form-control" type="file" accept=".png,.jpg,.jpeg" id="inputFile" name="inputFile" required>
+                            </div>
+        
+                            <div class="px-5 mb-3 position-relative z-3">
+                                <label for="payloadFile" class="form-label">Payload File</label>
+                                <input class="form-control" type="file" id="payloadFile" name="payloadFile" required>
+                            </div>
+                            <div class="mb-3 text-center position-relative z-3" id="imageInfoBox">
+                            </div>
+                            <div class="text-center position-relative z-3">
+                                <button type="submit" class="btn btn-primary">Embed</button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Extract
+        </button>
+      </h2>
+      <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordion">
+        <div class="accordion-body">
+          <div class="row justify-content-center">
+            <div class="col" style="max-width: 600px;">
+                <form action="{% url 'extract_route' %}" method="post" enctype="multipart/form-data" id="extractForm">
+                  {% csrf_token %}
+                  <div class="px-5 mb-3 position-relative z-3">
+                      <label for="inputFile" class="form-label">Input File</label>
+                      <input class="form-control" type="file" accept=".png,.jpg,.jpeg" id="inputFile" name="inputFile" required>
+                  </div>
+                  <div class="mb-3 text-center position-relative z-3" id="imageInfoBox">
+                  </div>
+                  <div class="text-center position-relative z-3">
+                      <button type="submit" class="btn btn-primary">Extract</button>
+                  </div>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    
+    var inputFile = document.querySelector("input#inputFile");
+    var form = document.querySelector("form#embedForm");
+
+    inputFile.onchange = (event) => {
+
+        let input = event.target;
+        var fr = new FileReader()
+        fr.readAsDataURL(input.files[0]);
+
+        fr.onload = function(e) {
+
+            let imagePreview = document.querySelector("#inputImagePreview");
+            imagePreview.src = this.result;
+
+            imagePreview.onload = () => {
+                let imageInfo = `Name: ${inputFile.files[0].name}
+                                 Image Size: ${imagePreview.naturalWidth} X ${imagePreview.naturalHeight}
+                                 Max. payload size: ${Math.floor((imagePreview.naturalWidth * imagePreview.naturalHeight * 3 / 8 - 4) / 1000)} kb
+                                `;
+                document.querySelector("div#imageInfoBox").innerText = imageInfo;
+            }
+        } 
+
+    }
+
+  </script>
+{%endblock%}

@@ -1,0 +1,12 @@
+img#inputImagePreview {
+    object-fit: contain;
+    opacity: 0.2;
+    z-index: 1;
+    position: relative;
+}
+
+
+div#embedInputs {
+    width: 600px !important;
+}
+

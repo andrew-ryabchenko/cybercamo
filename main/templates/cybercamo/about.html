@@ -1,0 +1,28 @@
+{%extends "cybercamo/base.html"%}
+
+{%block page_title%}
+Cybercamo | About
+{%endblock%}
+
+{%block page_body%}
+
+<div class="row">
+    <div class="col-12">
+        <p class="px-4">
+            LSB steganography, or Least Significant Bit steganography, is a technique for hiding secret data 
+            within the least significant bits of each pixel in an image, making the alterations virtually 
+            undetectable to the human eye.
+            <br>
+            Watch this video to better understand what is going on behind the scenes and how the payload data
+            is hidden in an image. 
+        </p>
+    </div>
+    <div class="col-12 text-center">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/TWEXCYQKyDc?si=AzlxtDPsq2hjBDMG&amp;start=54" 
+        title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        allowfullscreen></iframe>
+    </div>
+
+</div>
+
+{%endblock%}
