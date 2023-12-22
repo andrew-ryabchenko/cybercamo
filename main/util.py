@@ -1,21 +1,21 @@
+from io import BytesIO
 from bitstring import BitArray
 from PIL import Image
 from django.http import FileResponse
-from io import BytesIO
 
 def obfuscate_via_lsb(data_file, input_file) -> BytesIO | None:
-    
+
     data = data_file.read()
-    data_size = len(data) * 8
     data = BitArray(uint=len(data) * 8, length=32).bin + BitArray(bytes=data).bin
 
     i = 0
-    
+
     with Image.open(input_file) as img:
         width, height = img.size
         if len(data) > width * height * 3:
-            print("Data is too large to be embedded in the image. Data contains {} bytes, maximum is {}".format(
-                int(len(data) / 8), int(width * height * 3 / 8)))
+            print(("Data is too large to be embedded in the image."
+                   f"Data contains {int(len(data) / 8)} bytes,"
+                   f"maximum is {int(width * height * 3 / 8)}"))
             return None
         for x in range(0, width):
             for y in range(0, height):
@@ -29,15 +29,15 @@ def obfuscate_via_lsb(data_file, input_file) -> BytesIO | None:
                     break
             if i >= len(data):
                 break
-        
+
         temp_bytes = BytesIO()
-        
+
         img.save(temp_bytes, format="png")
-        
+
         temp_bytes.seek(0)
-      
+
         return temp_bytes
-    
+
 def deobfuscate_via_lsb(input_file) -> BytesIO:
     img = Image.open(input_file)
     payload_length = int("".join([str(x) for x in decode_img_nbits(img, 32)]), 2)
